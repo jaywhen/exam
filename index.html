@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>exam</title></head>
+<body><h1>Exam</h1>
+<h2>1:</h2>
+<blockquote><p>Set <strong>PC</strong> ip: 192.168....
+<strong>Gateway</strong>: 192.168...</p>
+</blockquote>
+<pre><code class='language-shell' lang='shell'>// create dir /nfs...
+vim /etc/exports
+/etc/init.d/nfs-server restart
+</code></pre>
+<pre><code class='language-shell' lang='shell'>// create dir /tftp...
+chmod -R 777 /tftp...
+vim /etc/xinetd.d/tftp
+service xinetd restart
+
+// uboot:
+setenv serverip PCip
+setenv ipaddr 192.168....
+saveenv
+</code></pre>
+<p>&nbsp;</p>
+<h2>2:</h2>
+<p><strong>uboot</strong>:</p>
+<pre><code class='language-shell' lang='shell'>set bootargs noinitrd console=ttySAC0 console=tty1 root=/dev/nfs nfsroot=192.168.9.96:/nfs996/fss ip=192.168.9.97:192.168.9.96:192.168.9.1:255.255.255.0::eth0:off
+</code></pre>
+<p><em>action1</em>:</p>
+<pre><code class='language-shell' lang='shell'>bootm 0x32000000
+tftp 0x32000000 uImage
+</code></pre>
+<p>&nbsp;</p>
+<p><strong><em>modify /root/桌面/linux-2.6.22.6/arch/arm/plat-s3c24xx/common-smdk.c</em></strong></p>
+<pre><code class='language-c' lang='c'>static struct mtd_partition smdk_default_nand_part[] = {
+	[0] = {
+		.name	= &quot;rsr&quot;,
+		.size	= SZ_8M,
+		.offset	= 0,
+	},
+	[1] = {
+		.name	= &quot;se&quot;,
+		.offset    = MTDPART_OFS_APPEND,
+		.size	= SZ_4M,
+	},
+	[2] = {
+	       .name	= &quot;cs&quot;,
+	       .offset 	= MTDPART_OFS_APPEND,
+	       .size		= SZ_16M,
+	},
+	[3] = {
+		.name	= &quot;cqnu&quot;,
+		.offset 	= MTDPART_OFS_APPEND,
+		.size	= MTDPART_SIZ_FULL,
+	}
+};
+</code></pre>
+<p>&nbsp;</p>
+<p><em>make uImage-&gt;/tftp...</em></p>
+<p><strong>uboot:</strong>
+<em>action1</em>
+waning: panic</p>
+<h2>3:</h2>
+<p>compile and install Busybox: </p>
+<p>in arm-linux/lib:</p>
+<pre><code class='language-shell' lang='shell'>cp *.so* rootfs/lib -d
+</code></pre>
+<p>&nbsp;</p>
+<p>rootfs:
+add /etc: 1:copy</p>
+<pre><code class='language-shell' lang='shell'>chmod +x /etc/init.d/rcS
+</code></pre>
+<p><em>make dev:</em></p>
+<pre><code class='language-shell' lang='shell'>mknod console c 5 1
+mknod null c 1 3
+mkdir proc mnt tmp sys root
+</code></pre>
+<p>copy fs -&gt; /nfs...</p>
+<p>&nbsp;</p>
+<h2>4:</h2>
+<p><em>! change /work/tslib/etx/ts.conf</em> 
+<em>copy /work/tslib -&gt; /nfs.../fss/usr/local</em></p>
+<pre><code class='language-shell' lang='shell'>$TSLIB_ROOT/bin/ts_calibrate
+</code></pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p> </p>
+<p>&nbsp;</p>
+</body>
+</html>
